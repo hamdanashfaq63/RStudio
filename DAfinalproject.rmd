@@ -1,0 +1,271 @@
+---
+title: "DA Final Project"
+author: "Hamdan Ashfaq, Cyrus MacCachran, and Gus Nelson"
+date: "2023-04-27"
+output:
+  html_document:
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+US_energy <- read.csv("2020-ATB-data.csv")
+
+```
+
+
+a) Introduction:
+
+The US Energy 2020 Consumption dataset offers a thorough overview of the country's energy market, including information on both renewable and non-renewable sources. The information comes from the Annual Technology Baseline (ATB) report and includes information on a wide range of metrics, including energy capacity, cost and financial cases, and greenhouse gas emissions. The dataset is crucial for researchers, policymakers, and energy analysts who want to comprehend the current state of US energy consumption and prepare for a sustainable energy future.
+
+The data show that renewable energy sources like wind and solar are becoming more and more popular, and that they will soon be more competitive than conventional non-renewable sources. The data also highlights the difficulties in making the switch to a fully renewable energy system, such as the need for grid modernization and energy storage. The dataset is a useful tool for those researching the US energy sector's future and its effects on society and the environment[2020-ATB-dataset,NREL]
+
+
+b) Ethical Consideration:
+
+Energy companies, policymakers, environmentalists, and the general public are among the many stakeholders involved in the 2020-ATB dataset on US energy consumption. The dataset is used by energy companies to better understand the energy market, spot lucrative investment opportunities, and streamline their operations in response to shifting energy demands. The dataset is used by policymakers to create energy policies, such as tax breaks and subsidies, that support the switch to clean energy sources. The dataset is used by environmentalists to monitor the development of the switch to renewable energy sources and promote legislation that will lessen carbon emissions. The dataset is used by the general public to inform energy consumption decisions and hold energy companies and policymakers accountable. Analyzing the 2020-ATB dataset raises ethical issues and responsibilities, as with any dataset. The possibility of data biases, such as underreporting of some energy resources or inaccurate representation of the environmental impact of some energy sources, is one cause for concern. The potential social and environmental effects of using renewable energy, such as the eviction of local communities or the harm done to wildlife habitats, are another issue. 
+
+DATA EXPLANATION AND EXPLORATION
+
+c)
+The 2020-ATB dataset gives detailed information on the country's energy sources' financial factors and information based on consumption. Both renewable and non-renewable energy sources are represented in the dataset as observations. The type of energy resource, capacity factor, financial case, and cost case are some of the important variables in the dataset. It also includes the interest rates(both nominal and real) , the type of technology used, the inflation rate, the tax rate, the debt fraction of each energy source in the US economy in a given year from 2017-2050(current findings & predictions). One issue with the dataset is that certain energy resources might not have been properly reported, which could result in biased analysis. An example of this is that certain variables literally have the same values for every energy source , which leaves only little to compare. Another issue is that the data is messy , and dealing with it to yield uniform results is a challenge. We might need to create datasets manually by picking rows and transposing the data ,so that we can compare 2 variables at a time. We might also need to multiple really small decimal numbers ( by 100, for example ) to show signifant deviance. The dataset might also not take into account the possible social and environmental effects of renewable energy sources. The notion that any shift to a renewable energy source is a “positive” is widespread but wrong: we fail to realize the economic implications and the consequences a particular shift brings. In order to avoid biases or other limitations in the analysis, it is essential to carefully validate the data that is being used.
+
+
+
+d)
+
+Figure 1 : Nominal Interest Rates of Natural Gas(2017-2050)
+```{r}
+library(ggplot2)
+
+NG_Nominal_dataset <- read.csv("NGdataset(d part).csv")
+
+ggplot(NG_Nominal_dataset, aes(x = Year, y = `IRNNaturalGas`)) +
+  geom_line(color = "black") +
+  labs(x = "Year", y = "Nominal Interest Rate(Natural Gas) in Percentage")
+
+
+
+
+```
+
+
+Figure 2 : Real Interest Rates of Natural Gas (2017-2050)
+```{r}
+library(ggplot2)
+NG_Real_dataset <- read.csv("NGdataset(dii part).csv")
+
+ggplot(NG_Real_dataset, aes(x = Year, y = `IRRNaturalGas`)) +
+  geom_line(color = "black") +
+  labs(x = "Year", y = "Real Interest Rate(Natural Gas) in Percentage")
+
+
+
+
+```
+
+i) Why did we choose “Natural Gas” as a reliable factor?
+
+Natural Gas was a logical choice as a predictor for renewable energy prices and consumption because of several key reasons. Firstly, it has a well-established market, being a widely traded commodity. Secondly, it is considered a "bridge fuel" due to its relatively cleaner nature, making it an important component of the energy mix as we transition to cleaner sources. As a result, it exerts significant influence on the energy market and can offer valuable insights into broader trends. Moreover, Natural Gas prices tend to be less volatile than those of other fossil fuels like oil, making it a more reliable and predictable predictor.
+
+
+ii) What led us to compare these particular two factors & our question’s relevance?
+
+Comparing the nominal interest rate and real interest rate of natural gas from 2017 to 2050 sheds light on the factors driving renewable energy consumption and pricing in the US. We noticed an anomaly: Even though the two line plots have an identical shape, the nominal interest rate’s y-axis values are almost twice the value of the real interest rate’s y-axis values, demonstrating the significant impact of inflation on natural gas pricing.
+
+According to the Economics concept of "Fisher equation" , the nominal interest rate equals the real interest rate plus the expected inflation rate. Therefore, the higher nominal interest rate indicates a higher expected inflation rate, decreasing the purchasing power of the dollar and driving up prices for goods and services. The renewable energy sector is not immune to this phenomenon, and thus, the prices of renewable energy sources have also increased over the past ten years.
+
+This observation is crucial for understanding the surge in renewable energy prices and consumption in the US over the last decade. Due to their lower marginal cost of production, which allows them to maintain a competitive advantage over fossil fuels even as prices rise, renewable energy sources are now more appealing than fossil fuels in light of rising inflation. Moreover, the increasing focus on sustainability and reducing carbon emissions has led to a significant increase in demand for renewable energy sources.
+
+
+In conclusion, the comparison between the nominal interest rate and real interest rate of natural gas from 2017 to 2050 offers insight into the factors driving renewable energy consumption and pricing in the US. The higher nominal interest rate due to inflation and the growing demand for sustainable energy are likely the underlying factors fueling the growth of renewable energy prices and consumption in the US over the past ten years, validating the relevance of the question "how the renewable energy sources prices/consumption have shown the highest increase in the US during the past ten years, and what could be the underlying factors for this growth?" in our research.
+
+
+STATISTICAL ANALYSIS AND INTERPRETATION
+
+e) 2 statistical models
+
+1st model (t-test of LandbasedWind WACC Real & Interest Rates using kable)
+```{r}
+library(knitr)
+
+WACC_nominal_LandbasedWind <- c(5.27, 5.25, 5.23, 5.20, 5.18, 5.15, 5.13, 5.11, 5.08, 5.06, 5.03, 5.01, 4.99, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96, 4.96)
+WACC_real_Landbasedwind <- c(5.27, 5.23, 5.18, 5.13, 5.08, 5.03, 4.99, 4.94, 4.89, 4.84, 4.79, 4.74, 4.70, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65, 4.65)
+
+ttest_results <- t.test(WACC_nominal_LandbasedWind, WACC_real_Landbasedwind)
+ttest_summary <- data.frame(
+  "Variable" = c("WACC nominal(%)", "WACC real(%)"),
+  "Mean" = c(mean(WACC_nominal_LandbasedWind), mean(WACC_real_Landbasedwind)),
+  "Standard Deviation" = c(sd(WACC_nominal_LandbasedWind), sd(WACC_real_Landbasedwind)),
+  "Sample Size" = c(length(WACC_nominal_LandbasedWind), length(WACC_real_Landbasedwind)),
+  "t-value" = ttest_results$statistic,
+  "p-value" = format(ttest_results$p.value, digits=10)
+)
+
+kable(ttest_summary, format = "markdown")
+
+
+```
+
+Explanation : 
+
+WACC is an important metric used to evaluate the cost of financing for a company. We chose WACC real and nominal interest rates specifically as we are interested in evaluating the cost of financing for companies in the renewable energy sector, which has its own set of risks and opportunities. Using the standard real and nominal interest rates would not accurately reflect the unique financing costs associated with this industry. WACC incorporates both the cost of equity and the cost of debt, which are specific to a company's capital structure.
+
+A relevant law of economics to our research question is the law of supply and demand. As the demand for renewable energy sources increases, the price of these sources tends to rise. On the other hand, as technology improves and the supply of renewable energy increases, the price tends to decrease. The increase in the consumption of renewable energy sources and the resulting decrease in prices can encourage more companies and individuals to adopt these sources, leading to further growth in demand.
+
+Looking at the results of our t-test, we can see that the mean nominal WACC for landbasedwind energy is higher than the mean real WACC. This difference suggests that nominal WACC does not account for inflation, leading to a higher cost of financing. Additionally, the t-test shows that there is statistically significant difference between the two rates, with a very small p-value, suggesting that the difference is not due to chance. However , if this large difference is important or not , that's for us to figure out.
+
+
+2nd model(Multivariate Regression)
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(broom)
+
+WACC_real_offshorewind <- c(4.27,	4.07,	3.88,	3.70,	3.52,	3.34,	3.17,	3.00,	2.84,	2.68,	2.53,	2.38,	2.23,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10,	2.10)
+
+RealRateofReturn_equity_offshorewind <- c(10.27,	9.97,	9.67,	9.37,	9.07,	8.77,	8.47,	8.17,	7.87,	7.57,	7.27,	6.97,	6.67,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37,	6.37)
+
+Debt_Fraction <- c(	60,	60,	61,	61,	62,	62,	62,	63,	63,	63,	64,	64,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65,	65)
+
+NominalRateofReturn_equity_offshorewind <- c(13.03,	12.72,	12.41,	12.11,	11.80,	11.49,	11.18,	10.88,	10.57,	10.26,	9.95,	9.65,	9.34,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03,	9.03)
+
+model <- lm(WACC_real_offshorewind ~ RealRateofReturn_equity_offshorewind + Debt_Fraction + NominalRateofReturn_equity_offshorewind , data = US_energy)
+
+summary(model)
+
+
+model_summary <- summary(model)
+
+
+coefficients <- coef(model_summary)
+se <- coef(model_summary)[, 2]
+t_stat <- coef(model_summary)[, 3]
+p_val <- coef(model_summary)[, 4]
+
+
+results_df <- data.frame(Coefficients = coefficients, SE = se, `t-statistic` = t_stat, `p-value` = p_val)
+
+
+results_df <- rbind(results_df[1, ], results_df[-1, ])
+
+
+results_df[, -1] <- round(results_df[, -1], 2)
+
+
+kable(results_df, align = "c")
+
+
+```
+
+Explanation :
+
+We used specifically, "WACC_real_offshorewind" , the Weighted Average Cost of Capital for offshore wind energy projects, "RealRateofReturn_equity_offshorewind" , the real rate of return required by equity investors in these projects, "Debt_Fraction" , the proportion of financing that comes from debt, and "NominalRateofReturn_equity_offshorewind" , the nominal rate of return required by equity investors. We decided to focus on the factors of offshore wind energy specifically because it is a rapidly growing sector of the renewable energy industry, and there is significant interest in understanding the financial factors that drive the growth of offshore wind projects.
+
+Interpreting the multiple regression results, we can see that all four independent variables have a statistically significant impact on the WACC of offshore wind energy projects. The "Debt_Fraction" variable has the largest impact, with a coefficient of -0.031, indicating that an increase in the proportion of financing from debt leads to a decrease in the cost of capital. The "NominalRateofReturn_equity_offshorewind" variable also has a significant negative impact on the WACC, while the "RealRateofReturn_equity_offshorewind" variable has a positive impact. Overall, the model explains 93.58% of the variance in WACC Real Interest Rate. 
+
+One economics law that supports our findings and links to our research question is the trade-off theory of capital structure. This theory suggests that firms balance the benefits of cheaper debt financing with the costs of financial distress, and that the optimal capital structure will vary based on the specific characteristics of the firm and its industry. Our findings show that the proportion of financing from debt is a significant factor in determining the cost of capital for offshore wind energy projects, indicating that offshore wind firms are also likely balancing these trade-offs. This suggests that the growth of offshore wind projects in the US may be driven in part by firms finding the optimal capital structure that balances the benefits and costs of debt financing.
+
+
+f) 
+
+1st Visual
+```{r}
+# Create a QQ plot for the multivariate regression
+residuals <- residuals(model)
+qqnorm(residuals)
+qqline(residuals)
+
+```
+
+Explanation(related to multivariate regression):
+
+In a QQ plot, we should get a perfectly straight line to prove significance for the validation. We have a snake-like cluster of points which reach gradient=0 near the line. The odd nature of this graph shows that we can draw no conclusions from this . If the QQ plot has an odd shape, it suggests that the distribution of residuals does not match the expected distribution. In the context of validating a multivariate regression model, this could mean that the model is mispecified or that there are issues with the data that may be affecting the results.If the QQ plot shows a significant deviation from a straight line, it may suggest that the results of the multivariate regression are ambiguous or unreliable. If the QQ plot shows a significant deviation from a straight line, it may suggest that the results of the multivariate regression are ambiguous or unreliable. However, this plot does approach the line but at the same time meets the line at gradient=0 , which is an anomaly suggesting that it is open to interpretation. We may be missing an important predictor, or no conclusions can be drawn from the given data itself.
+
+
+
+
+
+2nd visual (Residual Plot)
+```{r}
+
+residuals_df <- data.frame("Fitted Values" = fitted(model), "Residuals" = residuals(model))
+
+
+ggplot(residuals_df, aes(x = Fitted.Values, y = Residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red") +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  ggtitle("Residual Plot for Multivariate Regression Model")
+
+
+
+
+```
+
+Explanation(in relationship with multivariate regression):
+
+The residual plot in a multivariate regression model shows a "U" shape; it suggests that the relationship between the dependent variable and the independent variables may not be linear. In other words, the model may be missing some important predictors that could help explain the non-linear pattern. To our understanding , this should be the price factor, and the recurring values/ 0.01 difference that are usually found in every variable from the years 2035-2050 . The reason we think it is because For instance, in the energy sector, certain price thresholds may have an impact on consumer behavior and result in non-linear relationships between price and demand. The residuals may take the shape of a U if these non-linearities are not accounted for in the model. A U-shaped residual plot could also be produced if the model excludes recurring events that have an impact on the dependent variable, such as seasonal changes in energy consumption. This may also indicate that the error terms are not normally distributed and that there is heteroscedasticity. This graph adds to the unambiguity of the multiple regression's findings. It is statistically "significant" but it does not seem worthy to be used in findings.
+
+
+
+
+
+3rd Visual(Boxplot)
+```{r}
+library(ggplot2)
+
+df <- data.frame(
+  WACC = c(WACC_nominal_LandbasedWind, WACC_real_Landbasedwind),
+  Type = rep(c("Nominal", "Real"), each = length(WACC_nominal_LandbasedWind))
+)
+
+ggplot(df, aes(x = Type, y = WACC, fill = Type)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of WACC nominal and WACC real",
+       x = "Type", y = "WACC (%)")
+
+
+
+
+
+```
+
+Explanation(relationship with t-test):
+
+In this case, we can see that the boxplots for WACC nominal and WACC real overlap considerably, with similar median values and similar IQRs. This suggests that there is not a significant difference in the means of the two groups. Additionally, we do not see any outliers outside the whiskers, which further supports this conclusion. The data is also skewed heavily to the left : we can tell as the median is extremely close to the 25th percentile most likely due to the repetitive smaller values generally for each variable from the years 2035-2050- even the ones left that are different from each other. This plot is a prime example of the dataset's limitations - we have repetitive values in each category regardless the energytype leaving to compare. This is true considering we have different percentages starting from 2017 but they tend to become the same from the years 2035 onwards.
+
+Together with the small p-value obtained from the t-test, which suggests that the difference in means is statistically significant, the boxplot helps to provide a more comprehensive picture of the data and supports the conclusion that there is "a significant difference" in the means of the two groups but it is not "important".In other words, although the t-test shows that there is a statistically significant difference between the two sets of interest rates, this difference may not be large enough to have any practical impact on decision-making or other real-world applications. A likely reason for this disparity is the fact that a difference of some decimals in the interest rates can cause a huge difference in production and consumption because it is a general term that encompasses almost every financial factor both directly and indirectly in an economy.
+
+
+g) 
+Our research aimed to understand the factors driving the growth of renewable energy prices and consumption in the US over the past ten years. We compared nominal and real interest rates of natural gas from 2017 to 2050 and found that the higher nominal interest rate due to inflation and the growing demand for sustainable energy are likely driving the growth of renewable energy prices and consumption in the US. This is consistent with the law of supply and demand, which suggests that as the demand for renewable energy sources increases, so does the price.
+
+To accurately evaluate the cost of financing for companies in the renewable energy sector, we used WACC real and nominal interest rates. Our t-test showed that the mean nominal WACC for land-based wind energy is higher than the mean real WACC, suggesting that nominal WACC does not account for inflation, leading to a higher cost of financing. Additionally, our multiple regression analysis showed that all four independent variables have a statistically significant impact on the WACC of offshore wind energy projects, with the Real Rate of Return on Equity having the highest positive effect.
+
+Our findings support the trade-off theory of capital structure, which suggests that firms balance the benefits of cheaper debt financing with the costs of financial distress. The proportion of financing from debt is a significant factor in determining the cost of capital for offshore wind energy projects, indicating that offshore wind firms are likely balancing these trade-offs.
+
+However, it is important to note that the data is unambiguous, as we are missing some fundamentals. Additionally, the dataset is messy and has a lot of limitations, which may affect the generalizability of our results. Despite these limitations, our findings contribute to the understanding of the financial factors driving the growth of offshore wind projects in the US.
+
+CONCLUSION:
+
+h)
+Our data model produced visually interesting results, but the lack of a price variable in the dataset limited its reliability. This dataset measured price projections of different energy sources, and should have included a baseline price, usually in USD, that each energy source saw increase or decrease (Qazi et al, 2019). After analyzing the financial factors for each energy source, we found that many of the factors were repetitive across all energy source types, including the real interest rate, which had identical percentage rates and decimal numbers regardless of the energy source type and cost case. The remaining factors had little to offer and offered relationships that were in contradiction with assumption of established basic economic laws. For example, These laws assume that prices will adjust to equalize supply and demand across different markets or regions. If the financial factors used in the t-test are not consistent across different energy sources or regions, it means it has violated these assumptions. 
+
+
+Although the t-test resulted in a small p-value, indicating a significant difference, the boxplot and the u-shaped residual plot suggest that we are missing a crucial variable, which is most likely the price factor. Surprisingly, there was no mention of any US dollar prices in the dataset, even though energy sources are typically quoted in USD prices in the stock market. Therefore, caution should be exercised when interpreting the results of this model, and further research should be conducted using more robust and complete datasets. Moving forward, future data analysts and data collectors should focus on improving data quality and completeness. While this dataset was challenging to work with, it provided valuable experience in dealing with messy data and interpreting it. In other words, it provides a chilly introduction to a young, aspiring Data Analyst. We definitely learnt the most about R in this project ; Interestingly, the most out of any labs.
+
+i)
+CITATIONS:
+
+i) National Renewable Energy Laboratory. (2021, May 14). Renewable Energy Data Book. National Renewable Energy Laboratory. https://data.nrel.gov/submissions/145
+
+ii). Qazi, A., Hussain, F., Rahim, N. A., Hardaker, G., Alghazzawi, D., Shaban, K., & Haruna, K. (2019). Towards sustainable energy: a systematic review of renewable energy sources, technologies, and public opinions. IEEE access, 7, 63837-63851.
+
+
+
